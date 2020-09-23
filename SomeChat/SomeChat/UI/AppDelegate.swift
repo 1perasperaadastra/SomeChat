@@ -27,9 +27,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     var window: UIWindow?
+    let coordinator = AppCoordinator()
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.log(#function, fromtState: .notRunning, toState: .inactive)
+        let window = UIWindow()
+        self.window = window
+        coordinator.start(window: window)
         return true
     }
 
@@ -54,9 +59,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     private func log(_ methodName: String,
-                             fromtState oldState: LifeCycleSate,
-                             toState newState: LifeCycleSate) {
+                     fromtState oldState: LifeCycleSate,
+                     toState newState: LifeCycleSate) {
         Logger.info("Application moved from \(oldState) to \(newState): \(methodName)")
     }
 }
-
