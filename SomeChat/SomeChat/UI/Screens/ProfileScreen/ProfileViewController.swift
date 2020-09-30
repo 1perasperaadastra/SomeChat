@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal final class ProfileViewController: UIViewController, AppCoordinatorProtocol {
+internal final class ProfileViewController: ACViewController {
     private enum Constants {
         static let saveButtonCornerRadius: CGFloat = 14
         static let editButtonRightInset: CGFloat = 2
@@ -16,15 +16,13 @@ internal final class ProfileViewController: UIViewController, AppCoordinatorProt
         static let placeHolderTextBio = "Entry your bio info"
     }
 
-    var coordinator: AppCoordinator?
-    @IBOutlet weak var avatarView: UIImageView!
+    @IBOutlet weak var avatarView: AvatarView!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
     @IBOutlet weak var fullNameTextField: UITextField!
     @IBOutlet weak var bioTextView: UITextView!
     @IBOutlet weak var topAvatarViewConstrait: NSLayoutConstraint!
 
-    private let initialsView = InitialsView()
     private let textVerification = ProfileTextVerification()
     private var props: ProfileModel?
 
@@ -55,16 +53,6 @@ internal final class ProfileViewController: UIViewController, AppCoordinatorProt
         self.updateEditButtonFrame()
         self.avatarView.layer.cornerRadius = self.avatarView.bounds.height / 2
         self.saveButton.layer.cornerRadius = Constants.saveButtonCornerRadius
-
-        let avatarViewIsClear = self.avatarView.image == nil
-        if avatarViewIsClear {
-            let width = self.avatarView.frame.width / 1.578
-            let height = self.avatarView.frame.height / 1.7
-            let xOrig = self.avatarView.frame.origin.x + (self.avatarView.frame.width - width) / 2
-            let yOrig = self.avatarView.frame.origin.y + (self.avatarView.frame.height - height) / 2
-            self.initialsView.frame = CGRect(x: xOrig, y: yOrig, width: width, height: height)
-        }
-        self.initialsView.isHidden = !avatarViewIsClear
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -80,7 +68,8 @@ internal final class ProfileViewController: UIViewController, AppCoordinatorProt
         self.fullNameTextField.text = self.props?.fullName
         self.textFieldDidChangeText(self.fullNameTextField)
         self.bioTextView.text = self.props?.bioInfo
-        self.avatarView.image = self.props?.avatar
+        let avatarModel = AvatarViewModel(fullName: self.props?.fullName ?? "", image: self.props?.avatar)
+        self.avatarView.configure(model: avatarModel)
 
         if bioTextView.text.isEmpty || bioTextView.text == nil {
             bioTextView.text = Constants.placeHolderTextBio
@@ -97,13 +86,19 @@ internal final class ProfileViewController: UIViewController, AppCoordinatorProt
     }
 
     private func setupContoller() {
-        self.view.addSubview(self.initialsView)
         self.fullNameTextField.addTarget(self, action: #selector(textFieldDidChangeText(_:)), for: .editingChanged)
         self.editButton.addTarget(self, action: #selector(editButtonDidTap(_:)), for: .touchUpInside)
         self.saveButton.addTarget(self, action: #selector(saveButtonDidTap(_:)), for: .touchUpInside)
-        self.initialsView.backgroundColor = .clear
         self.fullNameTextField.delegate = self
         self.bioTextView.delegate = self
+
+        self.navigationItem.title = "My Profile"
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close",
+                                                                 style: .done,
+                                                                 target: self,
+                                                                 action: #selector(didTapCloseButton(_:)))
+        self.navigationController?.navigationBar.backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
 
         let gesture = UITapGestureRecognizer(target: self, action: #selector(backgroundDidTap(_:)))
         self.view.addGestureRecognizer(gesture)
@@ -129,7 +124,8 @@ internal final class ProfileViewController: UIViewController, AppCoordinatorProt
     @objc func keyboardWillShow(_ notification: NSNotification) {
         guard let frame = notification.keyboardEndFrame else { return }
 
-        let inset = self.bioTextView.frame.maxY - frame.minY
+        let bioTextFrame = self.view.window?.convert(self.bioTextView.frame, from: self.view) ?? .zero
+        let inset = bioTextFrame.maxY - frame.minY
         var topAvatarViewConstrait = Constants.topAvatarViewConstrait
         let bioTrippleLineHeight = (self.bioTextView.font?.lineHeight ?? 0) * 3
         if bioTrippleLineHeight > self.bioTextView.frame.height - inset,
@@ -163,32 +159,18 @@ internal final class ProfileViewController: UIViewController, AppCoordinatorProt
         self.coordinator?.showImagePicker(controller: self, delegate: self)
     }
 
+    @objc func didTapCloseButton(_ sender: UIBarButtonItem) {
+        self.dismiss(animated: true, completion: nil)
+    }
+
     @objc func backgroundDidTap(_ sender: UIGestureRecognizer) {
         self.view.endEditing(true)
     }
 
     @objc func textFieldDidChangeText(_ textField: UITextField) {
-        let whitespace = CharacterSet.whitespaces
-        let fullName = textField.text?.split(whereSeparator: { character -> Bool in
-            var result = false
-            character.unicodeScalars.forEach { unicodeScalar in
-                if whitespace.contains(unicodeScalar) {
-                    result = true
-                }
-            }
-            return result
-        })
-        if let firstChar = fullName?.first?.first {
-            self.initialsView.firstInitial = String(firstChar) as NSString
-        } else {
-            self.initialsView.firstInitial = "?"
-        }
-        if (fullName?.count ?? 0) == 2,
-            let secondChar = fullName?.last?.first {
-            self.initialsView.secondInitial = String(secondChar) as NSString
-        } else {
-            self.initialsView.secondInitial = ""
-        }
+        let avatarModel = AvatarViewModel(fullName: textField.text ?? "",
+                                          image: self.avatarView.image)
+        self.avatarView.configure(model: avatarModel)
     }
 }
 
@@ -237,7 +219,8 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController,
                                didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey: Any]) {
         let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
-        self.avatarView.image = image
+        let avatarModel = AvatarViewModel(fullName: self.fullNameTextField.text ?? "", image: image)
+        self.avatarView.configure(model: avatarModel)
         picker.dismiss(animated: true, completion: nil)
     }
 }

@@ -74,6 +74,7 @@ internal final class ProfilePresenter {
             } else {
                 self.configuration.userAvatarExist = false
             }
+            NotificationCenter.default.post(name: .profileDidUpdate, object: nil)
         }
     }
 
@@ -82,4 +83,8 @@ internal final class ProfilePresenter {
             self.start()
         }
     }
+}
+
+extension Notification.Name {
+    static let profileDidUpdate = Notification.Name("profileDidUpdate")
 }

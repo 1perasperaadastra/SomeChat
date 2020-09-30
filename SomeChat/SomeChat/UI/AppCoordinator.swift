@@ -16,19 +16,50 @@ internal protocol AppCoordinatorProtocol: class {
 
 internal final class AppCoordinator {
 
+    private let imageSource = ImageSource()
+    private let configuration = UserConfiguration(with: UserDefaults.standard)
+    private var transtion: ModalPresentationTransition?
+    private var conversationListPresenter: ConversationListPresenter?
+
     func start(window: UIWindow) {
-        let storyboard = UIStoryboard(name: "Profile", bundle: nil)
-        let configuration = UserConfiguration(with: UserDefaults.standard)
-        let imageSource = ImageSource()
-        let controller = storyboard.instantiateViewController(withIdentifier: "ProfileViewController")
-        let presenter = ProfilePresenter(configuration: configuration, imageSource: imageSource)
-        if let controller = controller as? ProfileRender {
-            presenter.render = controller
-        }
-        (controller as? AppCoordinatorProtocol)?.coordinator = self
+        let dataSource = ConversationListDataSource()
+        let presenter = ConversationListPresenter(dataSource: dataSource,
+                                                  configuration: self.configuration,
+                                                  imageSource: self.imageSource)
+        let controller = self.createController(type: ConversationListViewController.self)
+        self.conversationListPresenter = presenter
+        presenter.render = controller as? ConversationListRender
         presenter.start()
-        window.rootViewController = controller
+        let nav = UINavigationController(rootViewController: controller)
+
+        window.rootViewController = nav
         window.makeKeyAndVisible()
+    }
+
+    func showMainProfile(mainVC: UIViewController) {
+        let presenter = ProfilePresenter(configuration: self.configuration,
+                                         imageSource: self.imageSource)
+        let controller = self.createController(type: ProfileViewController.self)
+        presenter.render = controller as? ProfileRender
+        presenter.start()
+        let nav = UINavigationController(rootViewController: controller)
+        nav.modalPresentationStyle = .custom
+        self.transtion = ModalPresentationTransition()
+        let transitionDelegate = self.transtion
+        nav.transitioningDelegate = transitionDelegate
+
+        mainVC.present(nav, animated: true, completion: nil)
+    }
+
+    func showConversation(mainVC: UIViewController, conversation: ConversationViewModel) {
+        guard mainVC.navigationController != nil else { return }
+
+        let dataSource = ConversationDataSource()
+        let presenter = ConversationPresenter(dataSource: dataSource, member: conversation)
+        let controller = self.createController(type: ConversationViewController.self)
+        presenter.render = controller as? ConversationRender
+        presenter.start()
+        mainVC.navigationController?.pushViewController(controller, animated: true)
     }
 
     func showImagePicker(controller: UIViewController,
@@ -45,6 +76,14 @@ internal final class AppCoordinator {
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         controller.present(alert, animated: true, completion: nil)
+    }
+
+    private func createController<T>(type: T) -> UIViewController {
+        let storyboardName = String(describing: type).replacingOccurrences(of: "ViewController", with: "")
+        let storyboard = UIStoryboard(name: storyboardName, bundle: nil)
+        let controller = storyboard.instantiateViewController(withIdentifier: String(describing: type))
+        (controller as? AppCoordinatorProtocol)?.coordinator = self
+        return controller
     }
 
     private func showImagePickerPhoto(controller: UIViewController,
