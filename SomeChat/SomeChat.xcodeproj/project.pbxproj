@@ -7,9 +7,23 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		786FF9392517B96200F3DC6F /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF9382517B96200F3DC6F /* ProfileViewController.swift */; };
+		786FF93D2517C3F900F3DC6F /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF93C2517C3F900F3DC6F /* AppCoordinator.swift */; };
+		786FF9422517CCAC00F3DC6F /* Fonts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF9412517CCAC00F3DC6F /* Fonts.swift */; };
+		786FF9462517CEBA00F3DC6F /* SF-Pro-Display-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 786FF9452517CEBA00F3DC6F /* SF-Pro-Display-Bold.otf */; };
+		786FF9482517CEE900F3DC6F /* SF-Pro-Text-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 786FF9472517CEE900F3DC6F /* SF-Pro-Text-Regular.otf */; };
+		786FF94A2517D0AF00F3DC6F /* SF-Pro-Text-Semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 786FF9492517D0AE00F3DC6F /* SF-Pro-Text-Semibold.otf */; };
+		786FF94C2517D13100F3DC6F /* ProfileModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF94B2517D13100F3DC6F /* ProfileModel.swift */; };
+		786FF965251A792A00F3DC6F /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF964251A792A00F3DC6F /* Command.swift */; };
+		786FF967251A799500F3DC6F /* ProfileScreenBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF966251A799500F3DC6F /* ProfileScreenBuilder.swift */; };
+		786FF969251A79F000F3DC6F /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF968251A79F000F3DC6F /* ProfilePresenter.swift */; };
+		786FF96C251A7FE600F3DC6F /* NSNotification+extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF96B251A7FE600F3DC6F /* NSNotification+extension.swift */; };
+		786FF96E251A81EA00F3DC6F /* UserConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF96D251A81EA00F3DC6F /* UserConfiguration.swift */; };
+		786FF971251A899200F3DC6F /* ProfileTextVerification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF970251A899200F3DC6F /* ProfileTextVerification.swift */; };
+		786FF976251BC80B00F3DC6F /* InitialsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786FF975251BC80B00F3DC6F /* InitialsView.swift */; };
+		787EEE79251BDA6E00CA6D0F /* ImageSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 787EEE78251BDA6E00CA6D0F /* ImageSource.swift */; };
 		78DFB64A250D4653006A6F3C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB649250D4653006A6F3C /* AppDelegate.swift */; };
-		78DFB64E250D4653006A6F3C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB64D250D4653006A6F3C /* ViewController.swift */; };
-		78DFB651250D4653006A6F3C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78DFB64F250D4653006A6F3C /* Main.storyboard */; };
+		78DFB651250D4653006A6F3C /* Profile.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78DFB64F250D4653006A6F3C /* Profile.storyboard */; };
 		78DFB653250D4657006A6F3C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78DFB652250D4657006A6F3C /* Assets.xcassets */; };
 		78DFB656250D4657006A6F3C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 78DFB654250D4657006A6F3C /* LaunchScreen.storyboard */; };
 		78DFB65E250D4D87006A6F3C /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78DFB65D250D4D87006A6F3C /* Logger.swift */; };
@@ -17,10 +31,24 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		786FF9382517B96200F3DC6F /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		786FF93C2517C3F900F3DC6F /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		786FF9412517CCAC00F3DC6F /* Fonts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fonts.swift; sourceTree = "<group>"; };
+		786FF9452517CEBA00F3DC6F /* SF-Pro-Display-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Display-Bold.otf"; sourceTree = "<group>"; };
+		786FF9472517CEE900F3DC6F /* SF-Pro-Text-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Regular.otf"; sourceTree = "<group>"; };
+		786FF9492517D0AE00F3DC6F /* SF-Pro-Text-Semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro-Text-Semibold.otf"; sourceTree = "<group>"; };
+		786FF94B2517D13100F3DC6F /* ProfileModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileModel.swift; sourceTree = "<group>"; };
+		786FF964251A792A00F3DC6F /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
+		786FF966251A799500F3DC6F /* ProfileScreenBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileScreenBuilder.swift; sourceTree = "<group>"; };
+		786FF968251A79F000F3DC6F /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
+		786FF96B251A7FE600F3DC6F /* NSNotification+extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotification+extension.swift"; sourceTree = "<group>"; };
+		786FF96D251A81EA00F3DC6F /* UserConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserConfiguration.swift; sourceTree = "<group>"; };
+		786FF970251A899200F3DC6F /* ProfileTextVerification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTextVerification.swift; sourceTree = "<group>"; };
+		786FF975251BC80B00F3DC6F /* InitialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InitialsView.swift; sourceTree = "<group>"; };
+		787EEE78251BDA6E00CA6D0F /* ImageSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageSource.swift; sourceTree = "<group>"; };
 		78DFB646250D4653006A6F3C /* SomeChat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SomeChat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		78DFB649250D4653006A6F3C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		78DFB64D250D4653006A6F3C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		78DFB650250D4653006A6F3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		78DFB650250D4653006A6F3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Profile.storyboard; sourceTree = "<group>"; };
 		78DFB652250D4657006A6F3C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		78DFB655250D4657006A6F3C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		78DFB657250D4657006A6F3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -39,6 +67,74 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		786FF93A2517C33000F3DC6F /* ProfileScreen */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB64F250D4653006A6F3C /* Profile.storyboard */,
+				786FF9382517B96200F3DC6F /* ProfileViewController.swift */,
+				786FF966251A799500F3DC6F /* ProfileScreenBuilder.swift */,
+				786FF968251A79F000F3DC6F /* ProfilePresenter.swift */,
+				786FF94B2517D13100F3DC6F /* ProfileModel.swift */,
+				786FF970251A899200F3DC6F /* ProfileTextVerification.swift */,
+				786FF974251BC80100F3DC6F /* View */,
+			);
+			path = ProfileScreen;
+			sourceTree = "<group>";
+		};
+		786FF93B2517C34000F3DC6F /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB654250D4657006A6F3C /* LaunchScreen.storyboard */,
+				78DFB649250D4653006A6F3C /* AppDelegate.swift */,
+				786FF93A2517C33000F3DC6F /* ProfileScreen */,
+				786FF93C2517C3F900F3DC6F /* AppCoordinator.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		786FF93E2517CC8100F3DC6F /* Style */ = {
+			isa = PBXGroup;
+			children = (
+				786FF9412517CCAC00F3DC6F /* Fonts.swift */,
+			);
+			path = Style;
+			sourceTree = "<group>";
+		};
+		786FF9432517CE6E00F3DC6F /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				78DFB652250D4657006A6F3C /* Assets.xcassets */,
+				786FF9442517CE8000F3DC6F /* Fonts */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		786FF9442517CE8000F3DC6F /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				786FF9452517CEBA00F3DC6F /* SF-Pro-Display-Bold.otf */,
+				786FF9472517CEE900F3DC6F /* SF-Pro-Text-Regular.otf */,
+				786FF9492517D0AE00F3DC6F /* SF-Pro-Text-Semibold.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		786FF96A251A7FC600F3DC6F /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				786FF96B251A7FE600F3DC6F /* NSNotification+extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		786FF974251BC80100F3DC6F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				786FF975251BC80B00F3DC6F /* InitialsView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		78DFB63D250D4653006A6F3C = {
 			isa = PBXGroup;
 			children = (
@@ -58,12 +154,11 @@
 		78DFB648250D4653006A6F3C /* SomeChat */ = {
 			isa = PBXGroup;
 			children = (
-				78DFB649250D4653006A6F3C /* AppDelegate.swift */,
-				78DFB64D250D4653006A6F3C /* ViewController.swift */,
+				786FF93E2517CC8100F3DC6F /* Style */,
+				786FF93B2517C34000F3DC6F /* UI */,
+				786FF96A251A7FC600F3DC6F /* Extension */,
 				78DFB65F250D4F4C006A6F3C /* Utilits */,
-				78DFB64F250D4653006A6F3C /* Main.storyboard */,
-				78DFB652250D4657006A6F3C /* Assets.xcassets */,
-				78DFB654250D4657006A6F3C /* LaunchScreen.storyboard */,
+				786FF9432517CE6E00F3DC6F /* Resources */,
 				78DFB657250D4657006A6F3C /* Info.plist */,
 			);
 			path = SomeChat;
@@ -72,8 +167,11 @@
 		78DFB65F250D4F4C006A6F3C /* Utilits */ = {
 			isa = PBXGroup;
 			children = (
+				786FF96D251A81EA00F3DC6F /* UserConfiguration.swift */,
+				787EEE78251BDA6E00CA6D0F /* ImageSource.swift */,
 				78DFB65D250D4D87006A6F3C /* Logger.swift */,
 				78DFB660250D4F67006A6F3C /* EnvironmentVariables.swift */,
+				786FF964251A792A00F3DC6F /* Command.swift */,
 			);
 			path = Utilits;
 			sourceTree = "<group>";
@@ -88,6 +186,7 @@
 				78DFB642250D4653006A6F3C /* Sources */,
 				78DFB643250D4653006A6F3C /* Frameworks */,
 				78DFB644250D4653006A6F3C /* Resources */,
+				786FF9372517B7C900F3DC6F /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -136,35 +235,69 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				786FF94A2517D0AF00F3DC6F /* SF-Pro-Text-Semibold.otf in Resources */,
 				78DFB656250D4657006A6F3C /* LaunchScreen.storyboard in Resources */,
+				786FF9482517CEE900F3DC6F /* SF-Pro-Text-Regular.otf in Resources */,
 				78DFB653250D4657006A6F3C /* Assets.xcassets in Resources */,
-				78DFB651250D4653006A6F3C /* Main.storyboard in Resources */,
+				786FF9462517CEBA00F3DC6F /* SF-Pro-Display-Bold.otf in Resources */,
+				78DFB651250D4653006A6F3C /* Profile.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		786FF9372517B7C900F3DC6F /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"error: SwiftLint does not exist, download it from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		78DFB642250D4653006A6F3C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78DFB64E250D4653006A6F3C /* ViewController.swift in Sources */,
 				78DFB65E250D4D87006A6F3C /* Logger.swift in Sources */,
+				787EEE79251BDA6E00CA6D0F /* ImageSource.swift in Sources */,
+				786FF976251BC80B00F3DC6F /* InitialsView.swift in Sources */,
+				786FF94C2517D13100F3DC6F /* ProfileModel.swift in Sources */,
+				786FF9392517B96200F3DC6F /* ProfileViewController.swift in Sources */,
+				786FF971251A899200F3DC6F /* ProfileTextVerification.swift in Sources */,
+				786FF93D2517C3F900F3DC6F /* AppCoordinator.swift in Sources */,
 				78DFB64A250D4653006A6F3C /* AppDelegate.swift in Sources */,
+				786FF9422517CCAC00F3DC6F /* Fonts.swift in Sources */,
 				78DFB661250D4F67006A6F3C /* EnvironmentVariables.swift in Sources */,
+				786FF967251A799500F3DC6F /* ProfileScreenBuilder.swift in Sources */,
+				786FF96C251A7FE600F3DC6F /* NSNotification+extension.swift in Sources */,
+				786FF96E251A81EA00F3DC6F /* UserConfiguration.swift in Sources */,
+				786FF969251A79F000F3DC6F /* ProfilePresenter.swift in Sources */,
+				786FF965251A792A00F3DC6F /* Command.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		78DFB64F250D4653006A6F3C /* Main.storyboard */ = {
+		78DFB64F250D4653006A6F3C /* Profile.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				78DFB650250D4653006A6F3C /* Base */,
 			);
-			name = Main.storyboard;
+			name = Profile.storyboard;
 			sourceTree = "<group>";
 		};
 		78DFB654250D4657006A6F3C /* LaunchScreen.storyboard */ = {
