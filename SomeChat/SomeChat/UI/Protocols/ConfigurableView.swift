@@ -6,11 +6,12 @@
 //  Copyright © 2020 Алексей Махутин. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
-internal protocol ConfigurableView {
-
-    associatedtype ConfigurationModel
-
+internal protocol ConfigurableView: UITableViewCell {
     func configurate(with: ConfigurationModel)
+}
+
+internal protocol ConfigurationModel {
+    var identifier: String { get }
 }

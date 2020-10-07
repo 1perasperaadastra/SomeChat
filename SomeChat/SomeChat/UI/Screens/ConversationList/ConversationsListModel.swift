@@ -9,8 +9,7 @@
 import UIKit
 
 struct ConversationsListModel {
-    let online: [ConversationViewModel]
-    let offline: [ConversationViewModel]
+    let cells: [[ConfigurationModel]]
     let fullName: String
     let image: UIImage?
 }

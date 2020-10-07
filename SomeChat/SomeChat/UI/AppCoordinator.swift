@@ -16,33 +16,35 @@ internal protocol AppCoordinatorProtocol: class {
 
 internal final class AppCoordinator {
 
-    private let imageSource = ImageSource()
-    private let configuration = UserConfiguration(with: UserDefaults.standard)
+    private let container: AppContainer
     private var transtion: ModalPresentationTransition?
     private var conversationListPresenter: ConversationListPresenter?
+    private var themesPresenter: ThemesPresenter?
+
+    init(container: AppContainer) {
+        self.container = container
+    }
 
     func start(window: UIWindow) {
         let dataSource = ConversationListDataSource()
         let presenter = ConversationListPresenter(dataSource: dataSource,
-                                                  configuration: self.configuration,
-                                                  imageSource: self.imageSource)
+                                                  container: self.container)
         let controller = self.createController(type: ConversationListViewController.self)
         self.conversationListPresenter = presenter
         presenter.render = controller as? ConversationListRender
         presenter.start()
-        let nav = UINavigationController(rootViewController: controller)
+        let nav = BaseNavigationController(rootViewController: controller)
 
         window.rootViewController = nav
         window.makeKeyAndVisible()
     }
 
     func showMainProfile(mainVC: UIViewController) {
-        let presenter = ProfilePresenter(configuration: self.configuration,
-                                         imageSource: self.imageSource)
+        let presenter = ProfilePresenter(container: self.container)
         let controller = self.createController(type: ProfileViewController.self)
         presenter.render = controller as? ProfileRender
         presenter.start()
-        let nav = UINavigationController(rootViewController: controller)
+        let nav = BaseNavigationController(rootViewController: controller)
         nav.modalPresentationStyle = .custom
         self.transtion = ModalPresentationTransition()
         let transitionDelegate = self.transtion
@@ -62,19 +64,32 @@ internal final class AppCoordinator {
         mainVC.navigationController?.pushViewController(controller, animated: true)
     }
 
+    func showThemeMenu(mainVC: UIViewController) {
+        guard mainVC.navigationController != nil else { return }
+
+        let presenter = ThemesPresenter(container: self.container)
+        let controller = self.createController(type: ThemesViewController.self)
+        presenter.render = controller as? ThemesRender
+        presenter.start()
+        self.themesPresenter = presenter
+        mainVC.navigationController?.pushViewController(controller, animated: true)
+    }
+
     func showImagePicker(controller: UIViewController,
                          delegate: UIImagePickerControllerDelegate & UINavigationControllerDelegate) {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-
+        var models = [AlertCellModelProtocol]()
+        models.append(AlertTitleModel(mainTitle: "Edit photo",
+                                      secondTitle: "Please, choose one of the ways"))
         if AVCaptureDevice.authorizationStatus(for: .video) ==  .authorized {
-            alert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { _ in
+            models.append(AlertActionModel(mainTitle: "Camera", action: Command(action: {
                 self.showImagePickerCamera(controller: controller, delegate: delegate)
-            }))
+            })))
         }
-        alert.addAction(UIAlertAction(title: "Photos", style: .default, handler: { _ in
+        models.append(AlertActionModel(mainTitle: "Photo Gallery", action: Command(action: {
             self.showImagePickerPhoto(controller: controller, delegate: delegate)
-        }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        })))
+        models.append(AlertActionModel(mainTitle: "Cancel", action: Command(action: {})))
+        let alert = AlertController(models: models)
         controller.present(alert, animated: true, completion: nil)
     }
 

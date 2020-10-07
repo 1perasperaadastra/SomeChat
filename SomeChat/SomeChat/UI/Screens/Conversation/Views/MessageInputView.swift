@@ -8,8 +8,9 @@
 
 import UIKit
 
-internal final class MessageInputView: UIView {
+internal final class MessageInputView: BaseView {
 
+    @IBOutlet var mainView: UIView!
     @IBOutlet weak var inputTextField: UITextField!
 
     required init?(coder: NSCoder) {
@@ -35,7 +36,6 @@ internal final class MessageInputView: UIView {
         self.inputTextField.layer.borderWidth = 1
         self.inputTextField.layer.borderColor = UIColor.gray.cgColor
         self.inputTextField.clipsToBounds = true
-        self.inputTextField.backgroundColor = .white
         let paddingFrame = CGRect(x: 0,
                                   y: 0,
                                   width: 22,
@@ -43,5 +43,22 @@ internal final class MessageInputView: UIView {
         let paddingView = UIView(frame: paddingFrame)
         self.inputTextField.leftView = paddingView
         self.inputTextField.leftViewMode = .always
+        self.updateColor()
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.mainView.frame = self.bounds
+    }
+
+    override func didChangeColorTheme() {
+        super.didChangeColorTheme()
+        self.updateColor()
+    }
+
+    private func updateColor() {
+        self.mainView.backgroundColor = Colors.standartBackground()
+        self.inputTextField.backgroundColor = Colors.messageInputField()
     }
 }

@@ -21,6 +21,9 @@ internal final class ConversationListPresenter {
     private let dataSource: ConversationListDataSource
     private let configuration: UserConfiguration
     private let imageSource: ImageSource
+    private let notificationCenter: NotificationCenter
+    private var searchModel: SearchCellModel?
+    private var predicate = ""
 
     private var fullName: String {
         var firstName: String?
@@ -42,36 +45,51 @@ internal final class ConversationListPresenter {
     }
 
     init(dataSource: ConversationListDataSource,
-         configuration: UserConfiguration,
-         imageSource: ImageSource) {
+         container: ImageSourceContainer & UserConfigurationContainer & NotificationCenterContainer) {
         self.dataSource = dataSource
-        self.configuration = configuration
-        self.imageSource = imageSource
+        self.configuration = container.userConfiguration
+        self.imageSource = container.imageSource
+        self.notificationCenter = container.notificationCenter
     }
 
     func start() {
+        self.searchModel = SearchCellModel(searchTextDidChange: self.didChangeText())
         self.render?.render(props: self.buildModel())
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(updateProfile),
-                                               name: .profileDidUpdate,
-                                               object: nil)
+        self.notificationCenter.addObserver(self,
+                                            selector: #selector(updateProfile),
+                                            name: .profileDidUpdate,
+                                            object: nil)
     }
 
     private func buildModel() -> ConversationsListModel {
-        let models = self.dataSource.buildModels()
-        var onlineModels = [ConversationViewModel]()
-        var offlineModels = [ConversationViewModel]()
-        models.forEach { model in
-            model.isOnline ? onlineModels.append(model) : offlineModels.append(model)
+        var models = self.dataSource.buildModels().filter {
+            return self.predicate.isEmpty || $0.name.contains(self.predicate)
         }
+        var cells: [[ConfigurationModel]] = []
+        if let searchModel = self.searchModel {
+            cells.append([searchModel])
+        }
+        models = models.sorted(by: { first, _ -> Bool in
+            return first.isOnline
+        })
+        cells.append(contentsOf: [models])
         var image: UIImage?
         if self.configuration.userAvatarExist {
             image = self.imageSource.loadImage(withName: Constants.userAvatarName)
         }
-        return ConversationsListModel(online: onlineModels,
-                                      offline: offlineModels,
+
+        return ConversationsListModel(cells: cells,
                                       fullName: self.fullName,
                                       image: image)
+    }
+
+    private func didChangeText() -> CommandWith<String> {
+        return CommandWith { [weak self] text in
+            self?.predicate = text
+            if let props = self?.buildModel() {
+                self?.render?.render(props: props)
+            }
+        }
     }
 
     @objc private func updateProfile() {

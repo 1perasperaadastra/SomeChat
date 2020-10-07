@@ -25,24 +25,30 @@
                                 </constraints>
                                 <state key="normal" title="Save"/>
                             </button>
-                            <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Ly7-E1-TmT" customClass="AvatarView" customModule="SomeChat" customModuleProvider="target">
-                                <rect key="frame" x="68" y="45" width="239" height="239"/>
+                            <view clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="749" translatesAutoresizingMaskIntoConstraints="NO" id="Ly7-E1-TmT" customClass="AvatarView" customModule="SomeChat" customModuleProvider="target">
+                                <rect key="frame" x="84.5" y="45" width="206" height="206"/>
                                 <color key="backgroundColor" red="0.89411764705882346" green="0.90980392156862744" blue="0.16862745098039217" alpha="0.84705882352941175" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Ly7-E1-TmT" secondAttribute="height" multiplier="1:1" id="D9z-Oa-OHS"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xhP-Nj-tp4">
-                                <rect key="frame" x="262.5" y="258" width="46.5" height="26"/>
+                                <rect key="frame" x="262.5" y="221" width="30" height="30"/>
                                 <state key="normal" title="Edit"/>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Mahutin Aleksej" placeholder="Entry your name" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zKF-3Y-oJ0">
-                                <rect key="frame" x="78" y="320" width="219" height="30.5"/>
+                                <rect key="frame" x="78" y="287" width="219" height="30.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30.5" id="RQD-um-UZg"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="24"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" textContentType="name"/>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="IOS developer, Saint Petersburg, Russia" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="QYf-gw-hIw">
-                                <rect key="frame" x="78" y="382.5" width="219" height="182.5"/>
+                                <rect key="frame" x="78" y="349.5" width="219" height="215.5"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="40" id="mPj-Vz-gEK"/>
+                                </constraints>
                                 <color key="textColor" systemColor="labelColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
@@ -51,7 +57,6 @@
                         <viewLayoutGuide key="safeArea" id="poy-hy-f3v"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="xhP-Nj-tp4" firstAttribute="top" secondItem="Ly7-E1-TmT" secondAttribute="top" constant="213" id="0IR-EW-nIU"/>
                             <constraint firstItem="poy-hy-f3v" firstAttribute="trailing" secondItem="QYf-gw-hIw" secondAttribute="trailing" constant="78" id="0tX-et-x6a"/>
                             <constraint firstItem="zKF-3Y-oJ0" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="poy-hy-f3v" secondAttribute="leading" constant="78" id="79n-WD-xqr"/>
                             <constraint firstItem="poy-hy-f3v" firstAttribute="trailing" secondItem="Ap4-WY-aLQ" secondAttribute="trailing" constant="56" id="7YO-xA-2rq"/>
@@ -59,17 +64,16 @@
                             <constraint firstItem="poy-hy-f3v" firstAttribute="bottom" secondItem="Ap4-WY-aLQ" secondAttribute="bottom" constant="30" id="DIk-qw-tAk"/>
                             <constraint firstItem="Ly7-E1-TmT" firstAttribute="trailing" secondItem="xhP-Nj-tp4" secondAttribute="trailing" constant="-2" id="FRm-2U-fhj"/>
                             <constraint firstItem="zKF-3Y-oJ0" firstAttribute="centerX" secondItem="fhv-Qg-tUt" secondAttribute="centerX" id="Fyl-8T-VKw"/>
-                            <constraint firstItem="poy-hy-f3v" firstAttribute="trailing" secondItem="Ly7-E1-TmT" secondAttribute="trailing" constant="68" id="K2c-if-e6y"/>
                             <constraint firstItem="Ap4-WY-aLQ" firstAttribute="leading" secondItem="poy-hy-f3v" secondAttribute="leading" constant="56" id="Mak-7P-LFb"/>
                             <constraint firstItem="QYf-gw-hIw" firstAttribute="centerX" secondItem="fhv-Qg-tUt" secondAttribute="centerX" id="Qiz-P6-ixU"/>
                             <constraint firstItem="Ap4-WY-aLQ" firstAttribute="top" secondItem="QYf-gw-hIw" secondAttribute="bottom" constant="32" id="Tk6-qP-i6S"/>
                             <constraint firstItem="zKF-3Y-oJ0" firstAttribute="top" secondItem="Ly7-E1-TmT" secondAttribute="bottom" constant="36" id="ZpS-cc-WWG"/>
                             <constraint firstItem="xhP-Nj-tp4" firstAttribute="leading" secondItem="Ly7-E1-TmT" secondAttribute="centerX" multiplier="1.4" id="l4N-49-qUR"/>
+                            <constraint firstItem="Ly7-E1-TmT" firstAttribute="centerX" secondItem="fhv-Qg-tUt" secondAttribute="centerX" id="pHI-ar-hs2"/>
                             <constraint firstItem="Ly7-E1-TmT" firstAttribute="bottom" secondItem="xhP-Nj-tp4" secondAttribute="bottom" id="pky-ke-ce3"/>
                             <constraint firstItem="poy-hy-f3v" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="zKF-3Y-oJ0" secondAttribute="trailing" constant="78" id="q1p-pL-Ieo"/>
                             <constraint firstItem="Ly7-E1-TmT" firstAttribute="top" secondItem="poy-hy-f3v" secondAttribute="top" constant="45" id="tgh-zR-CT5"/>
                             <constraint firstItem="QYf-gw-hIw" firstAttribute="top" secondItem="zKF-3Y-oJ0" secondAttribute="bottom" constant="32" id="xlP-b7-oJr"/>
-                            <constraint firstItem="Ly7-E1-TmT" firstAttribute="leading" secondItem="poy-hy-f3v" secondAttribute="leading" constant="68" id="z39-NG-uRW"/>
                         </constraints>
                     </view>
                     <connections>

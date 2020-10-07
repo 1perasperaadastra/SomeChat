@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol ImageSourceContainer {
+    var imageSource: ImageSource { get }
+}
+
 internal final class ImageSource {
 
     @discardableResult
