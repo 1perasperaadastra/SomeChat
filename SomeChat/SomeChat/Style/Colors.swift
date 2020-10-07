@@ -42,6 +42,7 @@ enum Colors {
     case searchBackground
     case buttonBackground
     case navBarButtonColor
+    case changeColorBackground
 
     func callAsFunction(theme: ColorThemes = Colors.currentTheme) -> UIColor {
         switch self {
@@ -98,6 +99,12 @@ enum Colors {
             switch theme {
             case .night: return #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
             default: return #colorLiteral(red: 0.3294117647, green: 0.3294117647, blue: 0.3450980392, alpha: 0.65)
+            }
+        case .changeColorBackground:
+            switch theme {
+            case .night: return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+            case .day: return #colorLiteral(red: 0.09803921569, green: 0.2117647059, blue: 0.3803921569, alpha: 1)
+            case .classic: return #colorLiteral(red: 0.5026302338, green: 0.5494273305, blue: 0.4788448215, alpha: 1)
             }
         }
     }

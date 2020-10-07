@@ -22,7 +22,7 @@ protocol ThemesViewControllerDelegate: class {
     func didChangeTheme(_ themesViewController: ThemesViewController, theme: Int)
 }
 
-internal final class ThemesViewController: UIViewController {
+internal final class ThemesViewController: BaseViewController {
 
     private var props: ThemesModel?
     weak var delegate: ThemesViewControllerDelegate?
@@ -47,6 +47,11 @@ internal final class ThemesViewController: UIViewController {
                 view.addGestureRecognizer(gesture)
             }
         self.updateThemeView()
+        self.updateColor()
+    }
+
+    override func didChangeColorTheme() {
+        self.updateColor()
     }
 
     private func updateThemeView() {
@@ -69,6 +74,10 @@ internal final class ThemesViewController: UIViewController {
 
         self.props?.didChangeColorTheme(with: theme.rawValue)
         self.delegate?.didChangeTheme(self, theme: theme.rawValue)
+    }
+
+    private func updateColor() {
+        self.view.backgroundColor = Colors.changeColorBackground()
     }
 }
 
