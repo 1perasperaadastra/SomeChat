@@ -74,9 +74,7 @@ internal final class ConversationListPresenter {
         })
         cells.append(contentsOf: [models])
         var image: UIImage?
-        if self.configuration.userAvatarExist {
-            image = self.imageSource.loadImage(withName: Constants.userAvatarName)
-        }
+        image = self.imageSource.loadImage(withName: Constants.userAvatarName)
 
         return ConversationsListModel(cells: cells,
                                       fullName: self.fullName,
@@ -93,6 +91,8 @@ internal final class ConversationListPresenter {
     }
 
     @objc private func updateProfile() {
-        self.render?.render(props: self.buildModel())
+        DispatchQueue.main.async {
+            self.render?.render(props: self.buildModel())
+        }
     }
 }
