@@ -36,7 +36,6 @@ internal final class ProfileViewController: BaseViewController {
     private var state = State.preview {
         didSet { self.updateState() }
     }
-    private var gcdButtonTaped = false
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -237,18 +236,10 @@ internal final class ProfileViewController: BaseViewController {
         self.props?.didNameChanged(with: textField.text ?? "")
     }
 
-    @IBAction func didTapGCDButton() {
+    @IBAction func didTapSaveButton() {
         self.setupActivity(isHidden: false)
-        self.props?.didTapSaveWithGCD()
+        self.props?.didTapSaveButton()
         self.navigationItem.rightBarButtonItem?.isEnabled = false
-        self.gcdButtonTaped = true
-    }
-
-    @IBAction func didTapOperationButton() {
-        self.setupActivity(isHidden: false)
-        self.props?.didTapSaveWithOperation()
-        self.navigationItem.rightBarButtonItem?.isEnabled = false
-        self.gcdButtonTaped = false
     }
 }
 
@@ -271,11 +262,7 @@ extension ProfileViewController: ProfileRender {
                 self.setupActivity(isHidden: true)
                 self.navigationItem.rightBarButtonItem?.isEnabled = true
             }, repearBlock: {
-                if self.gcdButtonTaped {
-                    self.didTapGCDButton()
-                } else {
-                    self.didTapOperationButton()
-                }
+                self.didTapSaveButton()
             })
         case .succesful:
             self.coordinator?.showProfileSuccessfulAlert(controller: self) {

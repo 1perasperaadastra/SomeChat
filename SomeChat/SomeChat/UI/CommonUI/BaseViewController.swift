@@ -9,7 +9,15 @@
 import UIKit
 
 internal class BaseViewController: UIViewController, AppCoordinatorProtocol {
+    var dismissCompletionBlock: DismissCompletionBlock?
     var coordinator: AppCoordinator?
+
+    override func dismiss(animated flag: Bool, completion: (() -> Void)? = nil) {
+        super.dismiss(animated: flag, completion: { [weak self] in
+            self?.dismissCompletionBlock?()
+            completion?()
+        })
+    }
 }
 
 extension BaseViewController: ColorThemesNotification {

@@ -6,7 +6,7 @@
 //  Copyright © 2020 Алексей Махутин. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 protocol UserConfigurationContainer {
     var userConfiguration: UserConfiguration { get }
@@ -23,19 +23,22 @@ internal final class UserConfiguration {
 
     private struct Constants {
         static let storagePrefix = "someChat"
-        static let userFistName = "userFistName"
-        static let userLastName = "userLastName"
+        static let userFistName = "userName"
         static let userBio = "userBio"
         static let userAvatarExist = "userAvatarExist"
         static let colorTheme = "colorTheme"
     }
 
     static let shared = UserConfiguration()
-    let queue = DispatchQueue.init(label: "UserConfiguration", qos: .utility)
+    let queue = DispatchQueue(label: "UserConfiguration", qos: .utility)
     let userDefaults: UserDefaultsProtocol
 
     init(with userDefaults: UserDefaultsProtocol = UserDefaults.standard) {
         self.userDefaults = userDefaults
+    }
+
+    var uuid: String {
+        return UIDevice.current.identifierForVendor?.uuidString ?? ""
     }
 
     var colorTheme: Int? {
@@ -50,21 +53,12 @@ internal final class UserConfiguration {
         }
     }
 
-    var userFistName: String? {
+    var userName: String? {
         get {
             return self.userDefaults.string(forKey: self.forKey(string: Constants.userFistName))
         }
         set {
             self.userDefaults.set(newValue, forKey: self.forKey(string: Constants.userFistName))
-        }
-    }
-
-    var userLastName: String? {
-        get {
-            return self.userDefaults.string(forKey: self.forKey(string: Constants.userLastName))
-        }
-        set {
-            self.userDefaults.set(newValue, forKey: self.forKey(string: Constants.userLastName))
         }
     }
 

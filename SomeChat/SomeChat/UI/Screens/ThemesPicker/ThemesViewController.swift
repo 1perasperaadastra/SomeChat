@@ -14,7 +14,7 @@ private enum ThemesType: Int, CaseIterable {
     case night = 3
 
     var color: ColorThemes {
-        return ColorThemes.init(rawValue: self.rawValue) ?? Colors.currentTheme
+        return ColorThemes(rawValue: self.rawValue) ?? Colors.currentTheme
     }
 }
 

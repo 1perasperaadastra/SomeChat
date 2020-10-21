@@ -18,7 +18,7 @@ internal final class ConversationListViewController: BaseViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Tinkoff Chat"
+        self.navigationItem.title = "Tinkoff Channels"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.leftBarButtonItem?.target = self
         self.navigationItem.leftBarButtonItem?.action = #selector(settingsDidTap)
@@ -43,6 +43,20 @@ internal final class ConversationListViewController: BaseViewController {
 
         self.updateProps()
         self.updateColor()
+    }
+
+    @IBAction func didTapAddButton(_ sender: Any) {
+        let alert = UIAlertController(title: "Create channel", message: "Enter a channel name", preferredStyle: .alert)
+        alert.addTextField { (textField) in
+            textField.placeholder = "Channel name"
+        }
+        alert.addAction(UIAlertAction(title: "Create", style: .default, handler: { [weak alert] (_) in
+            let text = alert?.textFields?.first?.text ?? ""
+            self.props?.didAddChannel(with: text)
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true, completion: nil)
     }
 
     @objc private func avatarDidTap() {

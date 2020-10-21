@@ -21,6 +21,8 @@ struct ConversationModel {
     let messages: [ConversationMessageModel]
     let memberName: String
     let memberImage: UIImage?
+
+    let userDidEndMessage: CommandWith<String>
 }
 
 internal final class ConversationViewController: BaseViewController {
@@ -38,6 +40,7 @@ internal final class ConversationViewController: BaseViewController {
     @IBOutlet weak var nameLabel: UILabel!
 
     private var props: ConversationModel?
+    private var isKeyboardShow = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -54,6 +57,8 @@ internal final class ConversationViewController: BaseViewController {
         self.tableView.dataSource = self
         self.tableView.delegate = self
         self.tableView.contentInset.top = self.view.safeAreaInsets.top
+        self.inputMessageView.inputTextField.delegate = self
+        self.inputMessageView.sendButton.addTarget(self, action: #selector(didTapSendButton(_:)), for: .touchUpInside)
         self.updateProps()
         self.tableView.alpha = 0
         self.updateColor()
@@ -74,15 +79,18 @@ internal final class ConversationViewController: BaseViewController {
     }
 
     private func scrollToBottom(animated: Bool) {
+        guard self.props?.messages.count ?? 0 > 0 else { return }
+
         let index = (self.props?.messages.count ?? 0) - 1
         let indexPath = IndexPath(row: index < 0 ? 0 : index, section: 0)
         self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
     }
 
     @objc private func keyboardWillShow(_ notification: NSNotification) {
-        guard let frame = notification.keyboardEndFrame else { return }
+        guard let frame = notification.keyboardEndFrame, !self.isKeyboardShow else { return }
 
         let yOrig = self.tableView.contentOffset.y + frame.height - self.view.safeAreaInsets.bottom
+        self.isKeyboardShow = true
 
         notification.keyboardAnimate(animations: {
             self.bottomConstrait.constant = frame.height - self.view.safeAreaInsets.bottom
@@ -92,10 +100,24 @@ internal final class ConversationViewController: BaseViewController {
     }
 
     @objc private func keyboardWillHide(_ notification: NSNotification) {
+        self.isKeyboardShow = false
+
         notification.keyboardAnimate(animations: {
             self.bottomConstrait.constant = 0
             self.view.layoutIfNeeded()
         }, completion: nil)
+    }
+
+    @objc private func didTapSendButton(_ sender: UIButton) {
+        self.userDidEndMessage(textField: self.inputMessageView.inputTextField)
+    }
+
+    private func userDidEndMessage(textField: UITextField) {
+        guard let text = textField.text,
+              !text.isEmpty else { return }
+
+        self.props?.userDidEndMessage(with: text)
+        textField.text = ""
     }
 
     private func updateColor() {
@@ -143,5 +165,12 @@ extension ConversationViewController: ConversationRender {
     func render(props: ConversationModel) {
         self.props = props
         self.updateProps()
+    }
+}
+
+extension ConversationViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.userDidEndMessage(textField: textField)
+        return true
     }
 }

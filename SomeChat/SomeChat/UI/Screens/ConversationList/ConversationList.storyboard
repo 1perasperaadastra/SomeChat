@@ -36,13 +36,20 @@
                         <barButtonItem key="leftBarButtonItem" title="Item" image="Settings_group" id="nGR-mw-Gia">
                             <color key="tintColor" red="0.32941176470588235" green="0.32941176470588235" blue="0.34509803921568627" alpha="1" colorSpace="calibratedRGB"/>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" id="B6F-dK-4Au">
-                            <view key="customView" contentMode="center" id="ihG-tv-iKI" customClass="AvatarView" customModule="SomeChat" customModuleProvider="target">
-                                <rect key="frame" x="354" y="2" width="40" height="40"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.89411764705882346" green="0.90980392156862744" blue="0.16862745098039217" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem id="B6F-dK-4Au">
+                                <view key="customView" contentMode="center" id="ihG-tv-iKI" customClass="AvatarView" customModule="SomeChat" customModuleProvider="target">
+                                    <rect key="frame" x="354" y="2" width="40" height="40"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <color key="backgroundColor" red="0.89411764705882346" green="0.90980392156862744" blue="0.16862745098039217" alpha="1" colorSpace="calibratedRGB"/>
+                                </view>
+                            </barButtonItem>
+                            <barButtonItem style="done" systemItem="add" id="tMb-AT-X3E">
+                                <connections>
+                                    <action selector="didTapAddButton:" destination="nna-4P-ETc" id="efu-Vu-B3J"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="mainAvatarView" destination="ihG-tv-iKI" id="C9s-ly-P7p"/>

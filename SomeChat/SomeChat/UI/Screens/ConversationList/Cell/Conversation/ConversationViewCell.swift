@@ -13,12 +13,10 @@ internal struct ConversationViewModel: ConfigurationModel {
         return String(describing: ConversationViewCell.self)
     }
 
-    let personID: String
+    let channelID: String
     let name: String
     let message: String
-    let date: Date
-    let isOnline: Bool
-    let hasUnreadMessages: Bool
+    let date: Date?
     let image: UIImage?
 }
 
@@ -46,16 +44,16 @@ class ConversationViewCell: BaseViewCell, ConfigurableView {
         guard let model = model as? ConversationViewModel else { return }
 
         self.messageLabel.text = model.message.isEmpty ? Constants.emptyMessage : model.message
-        var font = model.message.isEmpty ? Fonts.conversationCellMSGEmpty(13) : Fonts.conversationCellMSG(13)
-        font = model.hasUnreadMessages ? Fonts.conversationCellMSGLast(13) : font
+        let font = model.message.isEmpty ? Fonts.conversationCellMSGEmpty(13) : Fonts.conversationCellMSG(13)
         self.messageLabel.font = self.fontMetric.scaledFont(for: font)
 
         self.nameLabel.text = model.name
         let avatarModel = AvatarViewModel(fullName: model.name, image: model.image)
         self.avatarView.configure(model: avatarModel)
         let converter = DateConverter()
-        self.dateLabel.text = converter.conversationTextDate(from: model.date)
-        self.onlineView.isHidden = !model.isOnline
+        if let date = model.date {
+            self.dateLabel.text = converter.conversationTextDate(from: date)
+        }
     }
 
     override func layoutSubviews() {
@@ -71,6 +69,7 @@ class ConversationViewCell: BaseViewCell, ConfigurableView {
         super.prepareForReuse()
         let avatarModel = AvatarViewModel(fullName: "", image: nil)
         self.avatarView.configure(model: avatarModel)
+        self.dateLabel.text = ""
     }
 
     private func setupApppearance() {

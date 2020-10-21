@@ -13,10 +13,11 @@ protocol ImageSourceContainer {
 }
 
 internal final class ImageSource {
+    static let userImageName = "userImage.jpg"
 
     @discardableResult
-    func saveImage(_ image: UIImage, name: String) -> URL? {
-        guard let imageData = image.jpegData(compressionQuality: 1),
+    func saveImage(_ image: UIImage?, name: String) -> URL? {
+        guard let imageData = image?.jpegData(compressionQuality: 1),
             let imageURL = FileManager.default.urls(for: .documentDirectory,
                                                     in: .userDomainMask).first?.appendingPathComponent(name)
             else { return nil }

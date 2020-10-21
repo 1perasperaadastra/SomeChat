@@ -13,6 +13,7 @@
             <connections>
                 <outlet property="inputTextField" destination="Kfo-yw-0kW" id="gTb-Ge-EGN"/>
                 <outlet property="mainView" destination="3oC-YQ-A3R" id="mhe-o3-ire"/>
+                <outlet property="sendButton" destination="PYi-KF-7jx" id="JQ1-TL-L5t"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
