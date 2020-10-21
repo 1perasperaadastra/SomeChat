@@ -27,13 +27,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     var window: UIWindow?
-    let coordinator = AppCoordinator()
+    var coordinator: AppCoordinator?
 
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         self.log(#function, fromtState: .notRunning, toState: .inactive)
         let window = UIWindow()
         self.window = window
+        let container = AppContainer()
+        let coordinator = AppCoordinator(container: container)
+        self.coordinator = coordinator
         coordinator.start(window: window)
         return true
     }

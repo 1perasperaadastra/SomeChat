@@ -8,7 +8,7 @@
 
 import UIKit
 
-internal final class ProfileViewController: ACViewController {
+internal final class ProfileViewController: BaseViewController {
     private enum Constants {
         static let saveButtonCornerRadius: CGFloat = 14
         static let editButtonRightInset: CGFloat = 2
@@ -37,6 +37,7 @@ internal final class ProfileViewController: ACViewController {
 
         self.setupApperance()
         self.setupContoller()
+        self.updateColor()
         self.props?.updateModel()
     }
 
@@ -58,6 +59,12 @@ internal final class ProfileViewController: ACViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.editButton.constraints.forEach { $0.isActive = false }
+    }
+
+    override func didChangeColorTheme() {
+        super.didChangeColorTheme()
+
+        self.updateColor()
     }
 
     private func updateProps() {
@@ -98,7 +105,6 @@ internal final class ProfileViewController: ACViewController {
                                                                  style: .done,
                                                                  target: self,
                                                                  action: #selector(didTapCloseButton(_:)))
-        self.navigationController?.navigationBar.backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
 
         let gesture = UITapGestureRecognizer(target: self, action: #selector(backgroundDidTap(_:)))
         self.view.addGestureRecognizer(gesture)
@@ -119,6 +125,10 @@ internal final class ProfileViewController: ACViewController {
         self.bioTextView.font = Fonts.profileScreenBIO(16)
         self.editButton.titleLabel?.font = Fonts.profileScreenButton(16)
         self.saveButton.titleLabel?.font = Fonts.profileScreenButton(19)
+    }
+
+    private func updateColor() {
+        self.saveButton.backgroundColor = Colors.buttonBackground()
     }
 
     @objc func keyboardWillShow(_ notification: NSNotification) {
@@ -142,7 +152,6 @@ internal final class ProfileViewController: ACViewController {
     @objc func keyboardWillHide(_ notification: NSNotification) {
         notification.keyboardAnimate(animations: {
             self.bioTextView.contentInset.bottom = 0
-            self.view.frame.origin = .zero
             self.topAvatarViewConstrait.constant = Constants.topAvatarViewConstrait
             self.view.layoutIfNeeded()
         }, completion: nil)
@@ -188,6 +197,14 @@ extension ProfileViewController: UITextFieldDelegate {
         return self.textVerification.isCorrectFullNameTextСhange(text: textField.text ?? "",
                                                              range: range,
                                                              replacementText: string)
+    }
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == self.fullNameTextField {
+            textField.resignFirstResponder()
+            return true
+        }
+        return false
     }
 }
 

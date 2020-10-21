@@ -1,5 +1,5 @@
 //
-//  ModalPresentationDelegate.swift
+//  ModalPresentationController.swift
 //  SomeChat
 //
 //  Created by Алексей Махутин on 29.09.2020.

@@ -23,7 +23,7 @@ struct ConversationModel {
     let memberImage: UIImage?
 }
 
-internal final class ConversationViewController: ACViewController {
+internal final class ConversationViewController: BaseViewController {
     private enum Constants {
         static let messageIn = "message_in"
         static let messageOut = "message_out"
@@ -42,6 +42,7 @@ internal final class ConversationViewController: ACViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.navigationItem.largeTitleDisplayMode = .never
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillShow(_:)),
                                                name: UIWindow.keyboardWillShowNotification,
@@ -52,8 +53,10 @@ internal final class ConversationViewController: ACViewController {
                                                object: nil)
         self.tableView.dataSource = self
         self.tableView.delegate = self
+        self.tableView.contentInset.top = self.view.safeAreaInsets.top
         self.updateProps()
         self.tableView.alpha = 0
+        self.updateColor()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -64,13 +67,19 @@ internal final class ConversationViewController: ACViewController {
         self.scrollToBottom(animated: false)
     }
 
-    func scrollToBottom(animated: Bool) {
+    override func didChangeColorTheme() {
+        super.didChangeColorTheme()
+
+        self.updateColor()
+    }
+
+    private func scrollToBottom(animated: Bool) {
         let index = (self.props?.messages.count ?? 0) - 1
         let indexPath = IndexPath(row: index < 0 ? 0 : index, section: 0)
         self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: false)
-      }
+    }
 
-    @objc func keyboardWillShow(_ notification: NSNotification) {
+    @objc private func keyboardWillShow(_ notification: NSNotification) {
         guard let frame = notification.keyboardEndFrame else { return }
 
         let yOrig = self.tableView.contentOffset.y + frame.height - self.view.safeAreaInsets.bottom
@@ -82,11 +91,15 @@ internal final class ConversationViewController: ACViewController {
         }, completion: nil)
     }
 
-    @objc func keyboardWillHide(_ notification: NSNotification) {
+    @objc private func keyboardWillHide(_ notification: NSNotification) {
         notification.keyboardAnimate(animations: {
             self.bottomConstrait.constant = 0
             self.view.layoutIfNeeded()
         }, completion: nil)
+    }
+
+    private func updateColor() {
+        self.tableView.backgroundColor = self.view.backgroundColor
     }
 
     private func createIdentifier(with model: ConversationMessageModel) -> String {

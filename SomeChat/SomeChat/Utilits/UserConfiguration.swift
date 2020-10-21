@@ -8,6 +8,10 @@
 
 import Foundation
 
+protocol UserConfigurationContainer {
+    var userConfiguration: UserConfiguration { get }
+}
+
 protocol UserDefaultsProtocol {
     func set(_ value: Any?, forKey defaultName: String)
     func string(forKey defaultName: String) -> String?
@@ -23,6 +27,7 @@ internal final class UserConfiguration {
         static let userLastName = "userLastName"
         static let userBio = "userBio"
         static let userAvatarExist = "userAvatarExist"
+        static let colorTheme = "colorTheme"
     }
 
     static let shared = UserConfiguration()
@@ -31,6 +36,18 @@ internal final class UserConfiguration {
 
     init(with userDefaults: UserDefaultsProtocol = UserDefaults.standard) {
         self.userDefaults = userDefaults
+    }
+
+    var colorTheme: Int? {
+        get {
+            guard let num = self.userDefaults.string(forKey: self.forKey(string: Constants.colorTheme))
+                else { return 1 }
+
+            return Int(num)
+        }
+        set {
+            self.userDefaults.set(newValue, forKey: self.forKey(string: Constants.colorTheme))
+        }
     }
 
     var userFistName: String? {

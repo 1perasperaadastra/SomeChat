@@ -21,6 +21,9 @@ enum Fonts {
 
     case conversationMessageCellText
 
+    case alertTitleMain
+    case alertTitleSecond
+
     func callAsFunction(_ size: CGFloat = UIFont.systemFontSize) -> UIFont {
         var font: UIFont?
         switch self {
@@ -41,6 +44,10 @@ enum Fonts {
         case .conversationCellDate:
             font = UIFont(name: "SFProText-Regular", size: size)
         case .conversationMessageCellText:
+            font = UIFont(name: "SFProText-Regular", size: size)
+        case .alertTitleMain:
+            font = UIFont(name: "SFProText-Semibold", size: size)
+        case .alertTitleSecond:
             font = UIFont(name: "SFProText-Regular", size: size)
         }
         if font == nil {

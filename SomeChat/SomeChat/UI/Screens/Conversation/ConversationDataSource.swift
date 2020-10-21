@@ -34,11 +34,6 @@ internal final class ConversationDataSource {
         vicinity property yet. The and collecting motionless difficulty son. His hearing staying ten colonel met. Sex
         drew six easy four dear cold deny. Moderate children at of outweigh it. Unsatiable it considered invitation he
         travelling insensible. Consulted admitting oh mr up as described acuteness propriety moonlight.
-
-        Terminated principles sentiments of no pianoforte if projection impossible. Horses pulled nature favour number
-        yet highly his has old. Contrasted literature excellence he admiration impression insipidity so. Scale ought who
-        terms after own quick since. Servants margaret husbands to screened in throwing. Imprudence oh an
-        collecting partiality. Admiration gay difficulty unaffected how.
         """
         var result = [ConversationMessageModel]()
         let maxDistance = 40
@@ -48,8 +43,10 @@ internal final class ConversationDataSource {
             let start = text.index(text.startIndex, offsetBy: initalIndex)
             let end = text.index(text.startIndex, offsetBy: endIndex)
             let message = String(text[start..<end])
-            result.append(ConversationMessageModel(type: self.randomDirection(),
-                                                   cellModel: MessageCellModel(text: message)))
+            let direction = self.randomDirection()
+            result.append(ConversationMessageModel(type: direction,
+                                                   cellModel: MessageCellModel(text: message,
+                                                                               incoming: direction == .incoming)))
         }
         return result
     }

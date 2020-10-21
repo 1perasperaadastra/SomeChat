@@ -20,11 +20,12 @@ internal final class ProfilePresenter {
     weak var render: ProfileRender?
     private let configuration: UserConfiguration
     private let imageSource: ImageSource
+    private let notificationCenter: NotificationCenter
 
-    init(configuration: UserConfiguration,
-         imageSource: ImageSource) {
-        self.configuration = configuration
-        self.imageSource = imageSource
+    init(container: ImageSourceContainer & UserConfigurationContainer & NotificationCenterContainer) {
+        self.configuration = container.userConfiguration
+        self.imageSource = container.imageSource
+        self.notificationCenter = container.notificationCenter
     }
 
     func start() {
@@ -74,7 +75,7 @@ internal final class ProfilePresenter {
             } else {
                 self.configuration.userAvatarExist = false
             }
-            NotificationCenter.default.post(name: .profileDidUpdate, object: nil)
+            self.notificationCenter.post(name: .profileDidUpdate, object: nil)
         }
     }
 
