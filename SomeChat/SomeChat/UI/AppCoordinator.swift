@@ -20,6 +20,7 @@ internal final class AppCoordinator {
     private var transtion: ModalPresentationTransition?
     private var conversationListPresenter: ConversationListPresenter?
     private var themesPresenter: ThemesPresenter?
+    private var profilePresenter: ProfilePresenter?
 
     init(container: AppContainer) {
         self.container = container
@@ -41,6 +42,7 @@ internal final class AppCoordinator {
 
     func showMainProfile(mainVC: UIViewController) {
         let presenter = ProfilePresenter(container: self.container)
+        self.profilePresenter = presenter
         let controller = self.createController(type: ProfileViewController.self)
         presenter.render = controller as? ProfileRender
         presenter.start()

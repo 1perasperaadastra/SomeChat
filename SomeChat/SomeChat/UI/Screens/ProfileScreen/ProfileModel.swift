@@ -8,19 +8,19 @@
 
 import UIKit
 
-internal struct PofileSaveModel {
-    let fullName: String?
-    let bioInfo: String?
-    let avatar: UIImage?
-}
-
 internal struct ProfileModel {
     let firstName: String?
     let secondName: String?
     let bioInfo: String?
     let avatar: UIImage?
 
-    let didTapSaveButton: CommandWith<PofileSaveModel>
+    let didTapSaveWithGCD: Command
+    let didTapSaveWithOperation: Command
+
+    let didNameChanged: CommandWith<String>
+    let didBioChanged: CommandWith<String>
+    let didImageChanged: CommandWith<UIImage>
+
     let updateModel: Command
 
     var fullName: String? {
@@ -33,4 +33,12 @@ internal struct ProfileModel {
         }
         return array.isEmpty ? nil : array.joined(separator: " ")
     }
+}
+
+internal struct ProfileSaveButtonModel {
+    let isEnabled: Bool
+}
+
+internal struct ProfileSaveResultModel {
+    let result: Result
 }

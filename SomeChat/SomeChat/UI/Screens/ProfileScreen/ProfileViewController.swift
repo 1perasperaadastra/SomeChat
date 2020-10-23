@@ -10,42 +10,48 @@ import UIKit
 
 internal final class ProfileViewController: BaseViewController {
     private enum Constants {
-        static let saveButtonCornerRadius: CGFloat = 14
+        static let saveEditStateButtonCornerRadius: CGFloat = 14
         static let editButtonRightInset: CGFloat = 2
         static let topAvatarViewConstrait: CGFloat = 45
         static let placeHolderTextBio = "Entry your bio info"
     }
 
+    private enum State {
+        case editable
+        case preview
+    }
+
+    @IBOutlet weak var activityView: UIActivityIndicatorView!
     @IBOutlet weak var avatarView: AvatarView!
-    @IBOutlet weak var saveButton: UIButton!
+    @IBOutlet weak var editStateButton: UIButton!
     @IBOutlet weak var editButton: UIButton!
+    @IBOutlet weak var saveStackView: UIStackView!
     @IBOutlet weak var fullNameTextField: UITextField!
     @IBOutlet weak var bioTextView: UITextView!
     @IBOutlet weak var topAvatarViewConstrait: NSLayoutConstraint!
+    private var dimmingView: UIView?
 
     private let textVerification = ProfileTextVerification()
     private var props: ProfileModel?
+    private var state = State.preview {
+        didSet { self.updateState() }
+    }
+    private var gcdButtonTaped = false
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-//        Logger.info(self.saveButton.frame.debugDescription) -- Будет крэш так как свойство еще не иницилизированно
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        Logger.info(self.saveButton.frame.debugDescription)
 
+        self.props?.updateModel()
         self.setupApperance()
         self.setupContoller()
         self.updateColor()
-        self.props?.updateModel()
-    }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        Logger.info(self.saveButton.frame.debugDescription)
-        //Фрэйм отличается потому как во viewdidload еще не иницилизированны констрейты
-        //А в viewDidAppear уже иницилизированны
+        self.updateState()
+        self.activityView.isHidden = true
+        self.setupActivity(isHidden: false)
     }
 
     override func viewDidLayoutSubviews() {
@@ -53,7 +59,13 @@ internal final class ProfileViewController: BaseViewController {
 
         self.updateEditButtonFrame()
         self.avatarView.layer.cornerRadius = self.avatarView.bounds.height / 2
-        self.saveButton.layer.cornerRadius = Constants.saveButtonCornerRadius
+        self.editStateButton.layer.cornerRadius = Constants.saveEditStateButtonCornerRadius
+        self.saveStackView.arrangedSubviews.forEach { view in
+            guard let button = view as? UIButton else { return }
+
+            button.layer.cornerRadius = Constants.saveEditStateButtonCornerRadius
+        }
+        self.dimmingView?.frame = self.view.bounds
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -72,7 +84,9 @@ internal final class ProfileViewController: BaseViewController {
             self.bioTextView != nil,
             self.avatarView != nil else { return }
 
-        self.fullNameTextField.text = self.props?.fullName
+        if self.props?.fullName?.count ?? 0 > 3 {
+            self.fullNameTextField.text = self.props?.fullName
+        }
         self.textFieldDidChangeText(self.fullNameTextField)
         self.bioTextView.text = self.props?.bioInfo
         let avatarModel = AvatarViewModel(fullName: self.props?.fullName ?? "", image: self.props?.avatar)
@@ -81,7 +95,10 @@ internal final class ProfileViewController: BaseViewController {
         if bioTextView.text.isEmpty || bioTextView.text == nil {
             bioTextView.text = Constants.placeHolderTextBio
             bioTextView.textColor = UIColor.lightGray
+        } else {
+            bioTextView.textColor = Colors.mainTitle()
         }
+        self.setupActivity(isHidden: true)
     }
 
     private func updateEditButtonFrame() {
@@ -95,7 +112,7 @@ internal final class ProfileViewController: BaseViewController {
     private func setupContoller() {
         self.fullNameTextField.addTarget(self, action: #selector(textFieldDidChangeText(_:)), for: .editingChanged)
         self.editButton.addTarget(self, action: #selector(editButtonDidTap(_:)), for: .touchUpInside)
-        self.saveButton.addTarget(self, action: #selector(saveButtonDidTap(_:)), for: .touchUpInside)
+        self.editStateButton.addTarget(self, action: #selector(editStateDidTap(_:)), for: .touchUpInside)
         self.fullNameTextField.delegate = self
         self.bioTextView.delegate = self
 
@@ -120,15 +137,55 @@ internal final class ProfileViewController: BaseViewController {
 
     private func setupApperance() {
         self.avatarView.clipsToBounds = true
-        self.saveButton.clipsToBounds = true
         self.fullNameTextField.font = Fonts.profileScreenName(24)
         self.bioTextView.font = Fonts.profileScreenBIO(16)
         self.editButton.titleLabel?.font = Fonts.profileScreenButton(16)
-        self.saveButton.titleLabel?.font = Fonts.profileScreenButton(19)
+
+        self.editStateButton.titleLabel?.font = Fonts.profileScreenButton(19)
+        self.editStateButton.clipsToBounds = true
+        self.saveStackView.arrangedSubviews.forEach { view in
+            guard let button = view as? UIButton else { return }
+
+            button.clipsToBounds = true
+            button.titleLabel?.font = Fonts.profileScreenButton(19)
+        }
     }
 
     private func updateColor() {
-        self.saveButton.backgroundColor = Colors.buttonBackground()
+        self.editStateButton.backgroundColor = Colors.buttonBackground()
+        self.saveStackView.arrangedSubviews.forEach { view in
+            guard let button = view as? UIButton else { return }
+
+            button.backgroundColor = Colors.buttonBackground()
+        }
+        self.bioTextView.tintColor = Colors.mainTitle()
+        self.bioTextView.tintColorDidChange()
+    }
+
+    private func updateState() {
+        self.editStateButton.isHidden = self.state == .editable
+        self.saveStackView.isHidden = self.state == .preview
+        self.editButton.isHidden = self.state == .preview
+        self.fullNameTextField.isUserInteractionEnabled = self.state == .editable
+        self.bioTextView.isUserInteractionEnabled = self.state == .editable
+    }
+
+    private func setupActivity(isHidden: Bool) {
+        self.activityView.isHidden = isHidden
+        if isHidden {
+            self.activityView.stopAnimating()
+            self.dimmingView?.removeFromSuperview()
+            self.dimmingView = nil
+        } else {
+            self.activityView.startAnimating()
+            if self.dimmingView == nil {
+                let view = UIView()
+                view.backgroundColor = self.view.backgroundColor?.withAlphaComponent(0.5)
+                self.dimmingView = view
+                self.view.addSubview(view)
+            }
+            self.view.bringSubviewToFront(self.activityView)
+        }
     }
 
     @objc func keyboardWillShow(_ notification: NSNotification) {
@@ -157,11 +214,8 @@ internal final class ProfileViewController: BaseViewController {
         }, completion: nil)
     }
 
-    @objc func saveButtonDidTap(_ sender: UIButton) {
-        let model = PofileSaveModel(fullName: self.fullNameTextField.text ?? "",
-                                    bioInfo: self.bioTextView.text,
-                                    avatar: self.avatarView.image)
-        self.props?.didTapSaveButton(with: model)
+    @objc func editStateDidTap(_ sender: UIButton) {
+        self.state = .editable
     }
 
     @objc func editButtonDidTap(_ sender: UIButton) {
@@ -180,10 +234,58 @@ internal final class ProfileViewController: BaseViewController {
         let avatarModel = AvatarViewModel(fullName: textField.text ?? "",
                                           image: self.avatarView.image)
         self.avatarView.configure(model: avatarModel)
+        self.props?.didNameChanged(with: textField.text ?? "")
+    }
+
+    @IBAction func didTapGCDButton() {
+        self.setupActivity(isHidden: false)
+        self.props?.didTapSaveWithGCD()
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.gcdButtonTaped = true
+    }
+
+    @IBAction func didTapOperationButton() {
+        self.setupActivity(isHidden: false)
+        self.props?.didTapSaveWithOperation()
+        self.navigationItem.rightBarButtonItem?.isEnabled = false
+        self.gcdButtonTaped = false
     }
 }
 
 extension ProfileViewController: ProfileRender {
+
+    func render(props: ProfileSaveButtonModel) {
+        guard self.saveStackView != nil else { return }
+
+        self.saveStackView.arrangedSubviews.forEach { view in
+            guard let button = view as? UIButton else { return }
+
+            button.isEnabled = props.isEnabled
+        }
+    }
+
+    func render(props: ProfileSaveResultModel) {
+        switch props.result {
+        case .error:
+            self.coordinator?.showProfileErrorAlert(controller: self, actiobButton: {
+                self.setupActivity(isHidden: true)
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+            }, repearBlock: {
+                if self.gcdButtonTaped {
+                    self.didTapGCDButton()
+                } else {
+                    self.didTapOperationButton()
+                }
+            })
+        case .succesful:
+            self.coordinator?.showProfileSuccessfulAlert(controller: self) {
+                self.props?.updateModel()
+                self.state = .preview
+                self.navigationItem.rightBarButtonItem?.isEnabled = true
+            }
+        }
+    }
+
     func render(props: ProfileModel) {
         self.props = props
         self.updateProps()
@@ -220,7 +322,7 @@ extension ProfileViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == UIColor.lightGray {
             textView.text = nil
-            textView.textColor = UIColor.black
+            textView.textColor = Colors.mainTitle()
         }
     }
 
@@ -230,6 +332,10 @@ extension ProfileViewController: UITextViewDelegate {
             textView.textColor = UIColor.lightGray
         }
     }
+
+    func textViewDidChange(_ textView: UITextView) {
+        self.props?.didBioChanged(with: textView.text)
+    }
 }
 
 extension ProfileViewController: UIImagePickerControllerDelegate {
@@ -238,6 +344,9 @@ extension ProfileViewController: UIImagePickerControllerDelegate {
         let image = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
         let avatarModel = AvatarViewModel(fullName: self.fullNameTextField.text ?? "", image: image)
         self.avatarView.configure(model: avatarModel)
+        if let newImage = image {
+            self.props?.didImageChanged(with: newImage)
+        }
         picker.dismiss(animated: true, completion: nil)
     }
 }

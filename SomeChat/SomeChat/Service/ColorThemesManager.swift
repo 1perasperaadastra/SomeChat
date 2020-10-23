@@ -13,28 +13,42 @@ protocol ColorThemesManagerContainer {
 }
 
 internal final class ColorThemesManager {
+    private enum Constants {
+        static let themeName = "theme.txt"
+    }
 
-    let userConfiguration: UserConfiguration
-    let notificationCenter: NotificationCenter
+    private let fileManager: AppFileManager
+    private let notificationCenter: NotificationCenter
+    private let queue = DispatchQueue(label: "com.ColorThemesManager", qos: .userInteractive)
 
     var currentTheme: ColorThemes {
         get { Colors.currentTheme }
         set { self.updateColorTheme(theme: newValue) }
     }
 
-    init(container: UserConfigurationContainer & NotificationCenterContainer) {
-        self.userConfiguration = container.userConfiguration
+    init(container: AppFileManagerContainer & NotificationCenterContainer) {
+        self.fileManager = container.appFileManager
         self.notificationCenter = container.notificationCenter
 
-        if let colorThemeNumber = self.userConfiguration.colorTheme {
-            Colors.currentTheme = ColorThemes(rawValue: colorThemeNumber) ?? Colors.currentTheme
-            self.updateAppearance()
+        self.queue.async {
+            if let data = self.fileManager.load(fileName: Constants.themeName),
+               let themeRaw = Int(String(data: data, encoding: .utf8) ?? "") {
+                Colors.currentTheme = ColorThemes(rawValue: themeRaw) ?? Colors.currentTheme
+                self.updateAppearance()
+            }
         }
     }
 
     private func updateColorTheme(theme: ColorThemes) {
         Colors.currentTheme = theme
-        self.userConfiguration.colorTheme = Colors.currentTheme.rawValue
+        self.queue.async {
+            if let data = String(Colors.currentTheme.rawValue).data(using: .utf8) {
+                let result = self.fileManager.save(fileName: Constants.themeName, data: data)
+                if result == .error {
+                    Logger.error("error when save theme")
+                }
+            }
+        }
         self.notificationCenter.post(name: .didChangeColorTheme, object: nil)
         self.updateAppearance()
     }
