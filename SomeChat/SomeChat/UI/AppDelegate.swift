@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -34,6 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.log(#function, fromtState: .notRunning, toState: .inactive)
         let window = UIWindow()
         self.window = window
+        FirebaseApp.configure()
         let container = AppContainer()
         let coordinator = AppCoordinator(container: container)
         self.coordinator = coordinator

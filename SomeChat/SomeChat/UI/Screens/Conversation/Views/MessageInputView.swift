@@ -12,7 +12,8 @@ internal final class MessageInputView: BaseView {
 
     @IBOutlet var mainView: UIView!
     @IBOutlet weak var inputTextField: UITextField!
-
+    @IBOutlet weak var sendButton: UIButton!
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         self.loadNib()

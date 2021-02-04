@@ -11,6 +11,9 @@ import MobileCoreServices
 import AVFoundation
 
 internal protocol AppCoordinatorProtocol: class {
+    typealias DismissCompletionBlock = () -> Void
+
+    var dismissCompletionBlock: DismissCompletionBlock? { get set }
     var coordinator: AppCoordinator? { get set }
 }
 
@@ -19,6 +22,7 @@ internal final class AppCoordinator {
     private let container: AppContainer
     private var transtion: ModalPresentationTransition?
     private var conversationListPresenter: ConversationListPresenter?
+    private var conversationPresenter: ConversationPresenter?
     private var themesPresenter: ThemesPresenter?
     private var profilePresenter: ProfilePresenter?
 
@@ -27,11 +31,13 @@ internal final class AppCoordinator {
     }
 
     func start(window: UIWindow) {
-        let dataSource = ConversationListDataSource()
-        let presenter = ConversationListPresenter(dataSource: dataSource,
+        let presenter = ConversationListPresenter(containerService: self.container,
                                                   container: self.container)
         let controller = self.createController(type: ConversationListViewController.self)
         self.conversationListPresenter = presenter
+        self.setupDismissBlock(controller: controller) {
+            self.conversationListPresenter = nil
+        }
         presenter.render = controller as? ConversationListRender
         presenter.start()
         let nav = BaseNavigationController(rootViewController: controller)
@@ -44,6 +50,9 @@ internal final class AppCoordinator {
         let presenter = ProfilePresenter(container: self.container)
         self.profilePresenter = presenter
         let controller = self.createController(type: ProfileViewController.self)
+        self.setupDismissBlock(controller: controller) {
+            self.profilePresenter = nil
+        }
         presenter.render = controller as? ProfileRender
         presenter.start()
         let nav = BaseNavigationController(rootViewController: controller)
@@ -58,9 +67,12 @@ internal final class AppCoordinator {
     func showConversation(mainVC: UIViewController, conversation: ConversationViewModel) {
         guard mainVC.navigationController != nil else { return }
 
-        let dataSource = ConversationDataSource()
-        let presenter = ConversationPresenter(dataSource: dataSource, member: conversation)
+        let presenter = ConversationPresenter(container: self.container, member: conversation)
+        self.conversationPresenter = presenter
         let controller = self.createController(type: ConversationViewController.self)
+        self.setupDismissBlock(controller: controller) {
+            self.conversationPresenter = nil
+        }
         presenter.render = controller as? ConversationRender
         presenter.start()
         mainVC.navigationController?.pushViewController(controller, animated: true)
@@ -74,6 +86,9 @@ internal final class AppCoordinator {
         presenter.render = controller as? ThemesRender
         presenter.start()
         self.themesPresenter = presenter
+        self.setupDismissBlock(controller: controller) {
+            self.themesPresenter = nil
+        }
         mainVC.navigationController?.pushViewController(controller, animated: true)
     }
 
@@ -93,6 +108,12 @@ internal final class AppCoordinator {
         models.append(AlertActionModel(mainTitle: "Cancel", action: Command(action: {})))
         let alert = AlertController(models: models)
         controller.present(alert, animated: true, completion: nil)
+    }
+
+    private func setupDismissBlock(controller: UIViewController, block: @escaping () -> Void) {
+        if let controller = controller as? BaseViewController {
+            controller.dismissCompletionBlock = block
+        }
     }
 
     private func createController<T>(type: T) -> UIViewController {

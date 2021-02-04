@@ -18,17 +18,17 @@ internal final class ProfilePresenter {
     weak var render: ProfileRender?
 
     private let notificationCenter: NotificationCenter
-    private let gcdDataSource: ProfileDataSourceProtocol?
-    private let operationDataSource: ProfileDataSourceProtocol?
+    private let userConfiguration: UserConfiguration
+    private let imageSource: ImageSource
     private var model: ProfileModel?
     private var newImage: UIImage?
     private var newName: String?
     private var newBio: String?
 
-    init(container: GCDProfileDataSourceContainer & OperationProfileDataSourceContainer & NotificationCenterContainer) {
+    init(container: ImageSourceContainer & UserConfigurationContainer & NotificationCenterContainer) {
         self.notificationCenter = container.notificationCenter
-        self.gcdDataSource = container.gcdProfileDataSource
-        self.operationDataSource = container.operationProfileDataSource
+        self.imageSource = container.imageSource
+        self.userConfiguration = container.userConfiguration
     }
 
     func start() {
@@ -37,14 +37,18 @@ internal final class ProfilePresenter {
     }
 
     private func loadFromDataSource() {
-        self.gcdDataSource?.load(completion: { model in
-            DispatchQueue.main.async { [weak self] in
+        DispatchQueue.global().async { [weak self] in
+            let image = self?.imageSource.loadImage(withName: ImageSource.userImageName)
+            let name = self?.userConfiguration.userName
+            let bio = self?.userConfiguration.userBio
+            let model = ProfileDataModel(name: name, bio: bio, image: image)
+            DispatchQueue.main.async {
                 guard let self = self else { return }
 
                 self.render?.render(props: self.buildModel(model: model))
                 self.render?.render(props: ProfileSaveButtonModel(isEnabled: false))
             }
-        })
+        }
     }
 
     private func buildModel(model: ProfileDataModel?) -> ProfileModel {
@@ -69,8 +73,7 @@ internal final class ProfilePresenter {
                                  secondName: secondName,
                                  bioInfo: model?.bio,
                                  avatar: model?.image,
-                                 didTapSaveWithGCD: self.didTapSaveWithGCD(),
-                                 didTapSaveWithOperation: self.didTapSaveWithOperation(),
+                                 didTapSaveButton: self.didTapSaveButton(),
                                  didNameChanged: self.didNameChanged(),
                                  didBioChanged: self.didBioChanged(),
                                  didImageChanged: self.didImageChanged(),
@@ -79,19 +82,22 @@ internal final class ProfilePresenter {
         return model
     }
 
-    private func didTapSaveWithGCD() -> Command {
+    private func didTapSaveButton() -> Command {
         return Command { [weak self] in
-            guard let gcd = self?.gcdDataSource else { return }
+            guard let self = self else { return }
 
-            self?.saveData(dataSource: gcd)
-        }
-    }
-
-    private func didTapSaveWithOperation() -> Command {
-        return Command { [weak self] in
-            guard let operation = self?.operationDataSource else { return }
-
-            self?.saveData(dataSource: operation)
+            DispatchQueue.global().async { [weak self] in
+                self?.imageSource.saveImage(self?.newImage, name: ImageSource.userImageName)
+                DispatchQueue.main.async {
+                    self?.userConfiguration.userBio = self?.newBio
+                    self?.userConfiguration.userName = self?.newName
+                    self?.newBio = nil
+                    self?.newImage = nil
+                    self?.newName = nil
+                    self?.notificationCenter.post(name: .profileDidUpdate, object: nil)
+                    self?.render?.render(props: ProfileSaveResultModel(result: Result.succesful))
+                }
+            }
         }
     }
 
@@ -117,21 +123,6 @@ internal final class ProfilePresenter {
         return CommandWith { [weak self] image in
             self?.newImage = image
             self?.render?.render(props: ProfileSaveButtonModel(isEnabled: true))
-        }
-    }
-
-    private func saveData(dataSource: ProfileDataSourceProtocol) {
-        let model = ProfileDataModel(name: self.newName, bio: self.newBio, image: self.newImage)
-        dataSource.save(model: model) { [weak self] result in
-            if result == .succesful {
-                self?.newBio = nil
-                self?.newImage = nil
-                self?.newName = nil
-                self?.notificationCenter.post(name: .profileDidUpdate, object: nil)
-            }
-            DispatchQueue.main.async {
-                self?.render?.render(props: ProfileSaveResultModel(result: result))
-            }
         }
     }
 

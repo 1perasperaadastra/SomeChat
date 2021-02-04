@@ -12,4 +12,6 @@ struct ConversationsListModel {
     let cells: [[ConfigurationModel]]
     let fullName: String
     let image: UIImage?
+
+    let didAddChannel: CommandWith<String>
 }

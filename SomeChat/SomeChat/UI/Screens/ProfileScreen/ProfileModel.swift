@@ -14,8 +14,7 @@ internal struct ProfileModel {
     let bioInfo: String?
     let avatar: UIImage?
 
-    let didTapSaveWithGCD: Command
-    let didTapSaveWithOperation: Command
+    let didTapSaveButton: Command
 
     let didNameChanged: CommandWith<String>
     let didBioChanged: CommandWith<String>

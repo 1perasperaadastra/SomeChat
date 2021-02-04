@@ -56,26 +56,15 @@
                             <stackView hidden="YES" opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="a7d-CZ-OJz">
                                 <rect key="frame" x="58" y="597" width="259" height="40"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eLL-Bk-Vhh">
-                                        <rect key="frame" x="0.0" y="0.0" width="124.5" height="40"/>
-                                        <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="f4W-5i-fbv"/>
-                                        </constraints>
-                                        <state key="normal" title="GCD"/>
-                                        <connections>
-                                            <action selector="didTapGCDButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="A7z-Ay-yzV"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OpO-s4-CRf">
-                                        <rect key="frame" x="134.5" y="0.0" width="124.5" height="40"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="259" height="40"/>
                                         <color key="backgroundColor" red="0.96470588239999999" green="0.96470588239999999" blue="0.96470588239999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="06r-EG-3X1"/>
                                         </constraints>
-                                        <state key="normal" title="Operation"/>
+                                        <state key="normal" title="Save"/>
                                         <connections>
-                                            <action selector="didTapOperationButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="osU-g3-NcK"/>
+                                            <action selector="didTapSaveButton" destination="BYZ-38-t0r" eventType="touchUpInside" id="osU-g3-NcK"/>
                                         </connections>
                                     </button>
                                 </subviews>

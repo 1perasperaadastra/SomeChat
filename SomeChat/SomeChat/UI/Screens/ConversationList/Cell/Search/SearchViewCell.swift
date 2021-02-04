@@ -46,7 +46,7 @@ class SearchViewCell: BaseViewCell, ConfigurableView {
     func updateColor() {
         if #available(iOS 13.0, *) {
             self.searchView?.searchTextField.backgroundColor = Colors.searchBackground()
-            self.searchView?.searchTextField.textColor = Colors.standartBackground()
+            self.searchView?.searchTextField.textColor = .black
         }
     }
 }

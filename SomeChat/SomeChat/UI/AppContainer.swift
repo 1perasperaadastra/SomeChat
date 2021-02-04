@@ -13,25 +13,22 @@ internal final class AppContainer: ImageSourceContainer,
                                    NotificationCenterContainer,
                                    ColorThemesManagerContainer,
                                    AppFileManagerContainer,
-                                   GCDProfileDataSourceContainer,
-                                   OperationProfileDataSourceContainer {
+                                   MessagesDataServiceContainer {
 
     private(set) var imageSource: ImageSource
     private(set) var userConfiguration: UserConfiguration
     private(set) var notificationCenter: NotificationCenter
     private(set) var colorThemesManager: ColorThemesManager?
     private(set) var appFileManager: AppFileManager
-    private(set) var gcdProfileDataSource: GCDProfileDataSource?
-    private(set) var operationProfileDataSource: OperationProfileDataSource?
+    private(set) var messagesDataService: MessagesDataService
 
     init() {
         self.imageSource = ImageSource()
         self.notificationCenter = NotificationCenter.default
         self.userConfiguration = UserConfiguration(with: UserDefaults.standard)
         self.appFileManager = AppFileManager()
+        self.messagesDataService = MessagesDataService(userConfiguration: userConfiguration)
         self.colorThemesManager = ColorThemesManager(container: self)
-        self.gcdProfileDataSource = GCDProfileDataSource(container: self)
-        self.operationProfileDataSource = OperationProfileDataSource(container: self)
     }
 }
 
